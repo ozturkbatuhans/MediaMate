@@ -5,7 +5,6 @@ A comprehensive media discovery and community platform for books, movies, and ga
 <img width="1903" height="656" alt="image" src="https://github.com/user-attachments/assets/0275ef2d-59f9-455c-829a-eace9bd7545d" />
 <img width="1900" height="1073" alt="image" src="https://github.com/user-attachments/assets/a0590cf0-c171-42ad-83d3-53e19c6933d0" />
 <img width="1890" height="1068" alt="image" src="https://github.com/user-attachments/assets/99dfbf74-a251-4260-98c7-0b7efbb60ee5" />
-<img width="396" height="1064" alt="image" src="https://github.com/user-attachments/assets/b264e7c9-8be6-429d-94b4-3ad14da8904c" />
 
 ## Table of Contents
 - [About](#about)
