@@ -138,33 +138,34 @@ node scripts/api/sync-games.js
 ```
 
 ##Project Structure
-mediamate/
-├── config/              # Configuration files
-│   ├── db.js
-│   ├── multer.js
-│   └── mapping.js
-├── modules/             # Business logic
-│   ├── login.js
-│   ├── register.js
-│   ├── user.js
-│   ├── search.js
-│   └── ...
-├── routes/              # Express routes
-│   ├── index.js
-│   └── community.js
-├── views/               # Handlebars templates
-│   ├── layouts/
-│   ├── partials/
-│   └── *.hbs
-├── public/              # Static files
-│   ├── stylesheets/
-│   ├── javascripts/
-│   └── images/
-├── scripts/             # Utility scripts
-│   ├── api/
-│   └── database/
-├── app.js               # Main application
-└── package.json
+      
+      mediamate/
+      ├── config/              # Configuration files
+      │   ├── db.js
+      │   ├── multer.js
+      │   └── mapping.js
+      ├── modules/             # Business logic
+      │   ├── login.js
+      │   ├── register.js
+      │   ├── user.js
+      │   ├── search.js
+      │   └── ...
+      ├── routes/              # Express routes
+      │   ├── index.js
+      │   └── community.js
+      ├── views/               # Handlebars templates
+      │   ├── layouts/
+      │   ├── partials/
+      │   └── *.hbs
+      ├── public/              # Static files
+      │   ├── stylesheets/
+      │   ├── javascripts/
+      │   └── images/
+      ├── scripts/             # Utility scripts
+      │   ├── api/
+      │   └── database/
+      ├── app.js               # Main application
+      └── package.json
 
 ## API Integration
 
