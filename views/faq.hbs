@@ -1,0 +1,63 @@
+<div class="container mt-5">
+  <section class="faq">
+    <div class="text-center">
+      <h3 style="color: #8b1d2e; margin-bottom: 8px;">{{cta}}</h3>
+      <p style="color: #8b1d2e; margin-bottom: 32px;">{{shortDescription}}</p> <!-- This space matches below -->
+    </div>
+  </section>
+
+  <!-- Equal spacing around accordion -->
+  <div style="padding-top: 0; padding-bottom: 32px;"> <!-- Match padding with paragraph's bottom margin -->
+    <div class="accordion" id="faqAccordion">
+      {{#each faqs}}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading{{@index}}">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse{{@index}}"
+              aria-expanded="false"
+              aria-controls="collapse{{@index}}"
+              style="padding-left: 20px; padding-right: 20px;">
+              {{this.question}}
+            </button>
+          </h2>
+          <div
+            id="collapse{{@index}}"
+            class="accordion-collapse collapse"
+            aria-labelledby="heading{{@index}}"
+          >
+            <div class="accordion-body text-muted" style="padding-left: 20px; padding-right: 20px;">
+              {{this.answer}}
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</div>
+<style>
+  /* Change background and text color when accordion button is active (opened) */
+  .accordion-button:not(.collapsed) {
+    background-color: #8b1d2e;
+    color: #fff;
+  }
+
+  /* Optional: Remove default Bootstrap blue border */
+  .accordion-button:focus {
+    box-shadow: none;
+    border-color: #8b1d2e;
+  }
+
+  /* Change chevron color (the arrow icon) */
+  .accordion-button::after {
+    filter: brightness(0) invert(1); /* Make it white */
+  }
+</style>
+
+
+
+
+
+

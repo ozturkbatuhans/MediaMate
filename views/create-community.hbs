@@ -1,0 +1,32 @@
+<div class="container mt-5 p-4 rounded" style="background-color: #8b1d2e; color: black; max-width: 600px;"> 
+  <h2 class="text-center text-white mb-4">Create a New Community</h2>
+
+  <form action="/community/create" method="POST" enctype="multipart/form-data">
+    <!-- Community Name -->
+    <div class="mb-3">
+      <label for="communityName" class="form-label text-white">Community Name</label>
+      <input type="text" class="form-control" id="communityName" name="CommunityName" required />
+    </div>
+
+    <!-- Image Upload -->
+    <div class="mb-3">
+      <label for="communityImage" class="form-label text-white">Upload a Picture</label>
+      <input type="file" class="form-control" id="communityImage" name="Picture" accept="image/*" required />
+    </div>
+
+    <!-- Keywords -->
+    <div class="mb-3">
+      <label for="communityKeywords" class="form-label text-white">Keywords</label>
+      <input type="text" class="form-control" id="communityKeywords" name="Keywords" placeholder="e.g., tech, coding, AI" required />
+      <div class="form-text text-light">Separate keywords with commas.</div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-light text-danger">Create</button>
+    </div>
+  </form>
+</div>
+
+
+

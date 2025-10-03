@@ -1,0 +1,51 @@
+<div class="container mt-5 p-4 rounded" style="background-color: hsla(351, 70%, 38%, 0.8); color: black;">
+  <h1 class="text-center mb-4">Submit a Request</h1>
+
+  {{#if successMessage}}
+    <div class="alert alert-success text-center">
+      {{successMessage}}
+    </div>
+  {{/if}}
+
+  {{#if errorMessage}}
+    <div class="alert alert-danger text-center">
+      {{errorMessage}}
+    </div>
+  {{/if}}
+
+  <form action="/add" method="POST" enctype="multipart/form-data" class="col-md-8 offset-md-2">
+
+
+    <div class="mb-3">
+      <label for="type" class="form-label">Category</label>
+      <select id="type" name="type" class="form-select" required>
+        <option value="">-- Select a category --</option>
+        <option value="Book">Book</option>
+        <option value="Game">Game</option>
+        <option value="Movie">Movie</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" id="title" name="title" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Description or URL</label>
+      <textarea id="description" name="description" rows="4" class="form-control" required></textarea>
+    </div>
+
+ <div class="mb-3">
+  <label for="image" class="form-label">Upload Image</label>
+  <input type="file" id="image" name="image" class="form-control" accept="image/*" required />
+</div>
+
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-light">Send Request</button>
+    </div>
+  </form>
+</div>
+
+

@@ -1,0 +1,57 @@
+<div class="container mt-5 text-center">
+  <h1 class="page-title mb-4">Choose Your Community</h1>
+
+  <!-- Floating Create Community Button -->
+  <div class="text-end mb-4">
+    <a href="/create-community" 
+       class="btn expand-btn d-inline-flex align-items-center">
+      <i class="bi bi-plus-lg"></i>
+      <span>Create Community</span>
+    </a>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-6">
+      <form class="d-flex" role="search" action="/community" method="POST">
+        <div class="input-group input-group-lg">
+          <button type="submit" class="btn" style="background-color: #8b1d2e; border-color: #8b1d2e;">
+            <i class="bi bi-search" style="color: white;"></i>
+          </button>
+          <input 
+            class="form-control border-2" 
+            type="search" 
+            name="query"
+            placeholder="Search for a community (e.g., gaming,action)" 
+            aria-label="Search"
+            style="border-color: #8b1d2e; background-color: #f4d1d1; color: #8b1d2e;"
+            value="{{searchQuery}}">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  {{#if error}}
+    <div class="alert alert-info" role="alert">
+      {{error}}
+    </div>
+  {{/if}}
+</div>
+
+<!-- Community Grid -->
+<div class="container">
+  <div class="row g-4">
+    {{#each communities}}
+      {{> communitypartial}}
+    {{/each}}
+    {{#unless communities.length}}
+      {{#unless error}}
+        <div class="alert alert-info" role="alert">
+          No communities available.
+        </div>
+      {{/unless}}
+    {{/unless}}
+  </div>
+</div>
+<script src="/javascripts/favorites.js"></script>

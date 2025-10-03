@@ -1,0 +1,107 @@
+<div class="container-fluid p-0">
+  <header>
+    <section class="hero">
+      <div class="banner"
+        style="background-image: url('{{hero.banner}}'); background-size: cover; background-position: center; height: 400px; display: flex; justify-content: center; align-items: center;">
+        <div class="container text-center" style="z-index: 2;">
+          <!-- Search bar -->
+          <div class="row mb-2">
+            <div class="search col-12 d-flex justify-content-end" style="z-index: 4;">
+              <form class="d-flex" role="search" action="/search" method="get">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text" style="background-color: #8b1d2e; border-color: #8b1d2e;">
+                    <i class="bi bi-search" style="color: white;"></i>
+                  </span>
+                  <input class="form-control border-2" type="search" name="query" placeholder="Find your {{title}}"
+                    aria-label="Search" style="border-color: #8b1d2e; background-color: #f4d1d1; color: #8b1d2e;">
+                  <button type="button" class="btn" style="background-color: #8b1d2e; border-color: #8b1d2e;"
+                    data-bs-toggle="modal" data-bs-target="#genreFilterModal">
+                    <i class="bi bi-funnel" style="color: white;"></i>
+                  </button>
+                  <input type="hidden" name="contentType" value="{{type}}">
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Hero title -->
+          <div class="row p-1" style="position: relative; z-index: 3;">
+            <div class="hero-text mx-auto">
+              <h2 class="m-0">{{hero.cta}}</h2>
+            </div>
+          </div>
+
+          <!-- Hero description -->
+          <div class="row" style="position: relative; z-index: 3;">
+            <div class="hero-desc mx-auto">
+              <p class="m-0">{{hero.shortDescription}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  {{> filtermodal }}
+
+  <!-- Top Rated Section with Slider -->
+  {{#if topRatedItems.length}}
+  <div class="container overflow-hidden text-center my-5">
+    <div class="row text-start ps-0 p-4">
+      <h3 class="text-primary-custom">Top Rated {{title}}</h3>
+    </div>
+    {{> slider_alt content=topRatedItems type=type }}
+  </div>
+  {{/if}}
+
+  <!-- Category Items Grid -->
+  <div class="container my-5">
+    <div class="row text-start ps-0 p-4">
+      <h3 class="text-primary-custom">Browse {{title}}</h3>
+    </div>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+      {{#each items}}
+      <div class="col">
+        {{> card_alt this type=../type }}
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</div>
+
+<!-- Styles -->
+<style>
+  .text-primary-custom {
+    color: #8b1d2e !important;
+  }
+
+  .hero-text {
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.35);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    max-width: 60%;
+  }
+
+  .hero-desc {
+    backdrop-filter: blur(2px);
+    background-color: rgba(0, 0, 0, 0.25);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 5px;
+    display: inline-block;
+    max-width: 40%;
+  }
+
+  .slider-container {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .slider {
+    display: flex;
+    gap: 1rem;
+  }
+</style>

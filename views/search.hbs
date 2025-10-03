@@ -1,0 +1,108 @@
+<div class="container mt-5 text-center">
+    <h1 class="page-title mb-4">Search Results</h1>
+
+    <!-- Search Bar -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-6">
+            <form class="d-flex" id="searchForm" role="search" action="/search" method="POST">
+                <div class="input-group">
+                    <span class="input-group-text" style="background-color: #8b1d2e; border-color: #8b1d2e;">
+                        <i class="bi bi-search" style="color: white;"></i>
+                    </span>
+                    <input class="form-control border-2" type="search" name="query"
+                        placeholder="Find books, movies, or games..." aria-label="Search"
+                        style="border-color: #8b1d2e; background-color: #f4d1d1; color: #8b1d2e;"
+                        value="{{searchQuery}}">
+                    {{#if contentType}}
+                        <input type="hidden" name="contentType" value="{{contentType}}">
+                    {{/if}}
+                    <button type="button" class="btn" style="background-color: #8b1d2e; border-color: #8b1d2e;" data-bs-toggle="modal" data-bs-target="#genreFilterModal">
+                        <i class="bi bi-funnel" style="color: white;"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{>filtermodal contentType=contentType}}
+
+    <!-- Search Results Grid -->
+    <div class="container">
+        {{#if error}}
+        <div class="alert alert-danger" role="alert">
+            {{error}}
+        </div>
+        {{/if}}
+
+        {{#if searchResults.length}}
+        <div class="row g-4">
+            {{#each searchResults}}
+            <div class="col-md-3">
+                {{> card type=ContentType id=ContentID img=Image title=Title Genres=Genres}}
+            </div>
+            {{/each}}
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Search results pagination" class="mt-5">
+            <ul class="pagination custom-pagination justify-content-center">
+                <!-- Previous Link -->
+                <li class="page-item {{#if (eq currentPage 1)}}disabled{{/if}}">
+                    <a class="page-link" href="/search?page={{subtract currentPage 1}}{{#if searchQuery}}&query={{encodeURIComponent searchQuery}}{{/if}}{{#if selectedGenres.length}}&genres={{join selectedGenres ','}}{{/if}}{{#if contentType}}&contentType={{encodeURIComponent contentType}}{{/if}}"
+                       {{#if (eq currentPage 1)}}aria-disabled="true"{{/if}}>Previous</a>
+                </li>
+
+                <!-- Page Numbers (Simplified) -->
+                {{#if (gt totalPages 1)}}
+                <!-- Always show page 1 -->
+                <li class="page-item {{#if (eq 1 currentPage)}}active{{/if}}">
+                    <a class="page-link" href="/search?page=1{{#if searchQuery}}&query={{encodeURIComponent searchQuery}}{{/if}}{{#if selectedGenres.length}}&genres={{join selectedGenres ','}}{{/if}}{{#if contentType}}&contentType={{encodeURIComponent contentType}}{{/if}}">1</a>
+                </li>
+
+                <!-- Ellipsis if startPage > 2 -->
+                {{#if (gt startPage 2)}}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {{/if}}
+
+                <!-- Show page numbers from startPage to endPage -->
+                {{#each (rangeHelper startPage endPage)}}
+                {{#if (gt this 1)}} <!-- Skip page 1 as it's already added -->
+                {{#if (lte this ../totalPages)}} <!-- Ensure we don't exceed totalPages -->
+                <li class="page-item {{#if (eq this ../currentPage)}}active{{/if}}">
+                    <a class="page-link" href="/search?page={{this}}{{#if ../searchQuery}}&query={{encodeURIComponent ../searchQuery}}{{/if}}{{#if ../selectedGenres.length}}&genres={{join ../selectedGenres ','}}{{/if}}{{#if ../contentType}}&contentType={{encodeURIComponent ../contentType}}{{/if}}">{{this}}</a>
+                </li>
+                {{/if}}
+                {{/if}}
+                {{/each}}
+
+                <!-- Ellipsis if endPage < totalPages - 1 -->
+                {{#if (lt endPage (subtract totalPages 1))}}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {{/if}}
+
+                <!-- Always show last page if > 1 -->
+                {{#if (gt totalPages 1)}}
+                <li class="page-item {{#if (eq totalPages currentPage)}}active{{/if}}">
+                    <a class="page-link" href="/search?page={{totalPages}}{{#if searchQuery}}&query={{encodeURIComponent searchQuery}}{{/if}}{{#if selectedGenres.length}}&genres={{join selectedGenres ','}}{{/if}}{{#if contentType}}&contentType={{encodeURIComponent contentType}}{{/if}}">{{totalPages}}</a>
+                </li>
+                {{/if}}
+                {{/if}}
+
+                <!-- Next Link -->
+                <li class="page-item {{#if (eq currentPage totalPages)}}disabled{{/if}}">
+                    <a class="page-link" href="/search?page={{add currentPage 1}}{{#if searchQuery}}&query={{encodeURIComponent searchQuery}}{{/if}}{{#if selectedGenres.length}}&genres={{join selectedGenres ','}}{{/if}}{{#if contentType}}&contentType={{encodeURIComponent contentType}}{{/if}}"
+                       {{#if (eq currentPage totalPages)}}aria-disabled="true"{{/if}}>Next</a>
+                </li>
+            </ul>
+        </nav>
+        {{else}}
+        <div class="alert alert-info" role="alert">
+            No results found. Try a different search!
+        </div>
+        {{/if}}
+    </div>
+</div>

@@ -1,0 +1,9 @@
+1. /bin/www:
+	...
+	server.listen(port, () => {
+		console.log(`Server running on http://<ipIPV4adress>:${port}`);
+	});
+    *IPV4adress: terminal -> enter 'ipconfig'
+2. setting -> firewall -> binnenkomende verbinding -> nieuwe regel -> Poort - TCP - 3000(3001)
+3. run
+   link = http://<ipadress>:3000

@@ -1,0 +1,85 @@
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-games-tab" data-bs-toggle="tab" data-bs-target="#nav-games" type="button" role="tab" aria-controls="nav-games" aria-selected="true">Games</button>
+    <button class="nav-link" id="nav-movies-tab" data-bs-toggle="tab" data-bs-target="#nav-movies" type="button" role="tab" aria-controls="nav-movies" aria-selected="false">Movies</button>
+    <button class="nav-link" id="nav-books-tab" data-bs-toggle="tab" data-bs-target="#nav-books" type="button" role="tab" aria-controls="nav-books" aria-selected="false">Books</button>
+    <button class="nav-link" id="nav-communities-tab" data-bs-toggle="tab" data-bs-target="#nav-communities" type="button" role="tab" aria-controls="nav-communities" aria-selected="false">Communities</button>
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <!-- Games Tab -->
+  <div class="tab-pane fade show active" id="nav-games" role="tabpanel" aria-labelledby="nav-games-tab">
+    <h2 class="text-center my-4">Favorite Games</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {{#each favorites.games}}
+        <div class="col">
+        {{> card_alt this type=../type }}
+        </div>
+      {{else}}
+        <div class="col-12 text-center">
+          <p>No favorite games yet</p>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+  
+  <!-- Movies Tab -->
+  <div class="tab-pane fade" id="nav-movies" role="tabpanel" aria-labelledby="nav-movies-tab">
+    <h2 class="text-center my-4">Favorite Movies</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {{#each favorites.movies}}
+        <div class="col">
+        {{> card_alt this type=../type }}
+        </div>
+      {{else}}
+        <div class="col-12 text-center">
+          <p>No favorite movies yet</p>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+  
+  <!-- Books Tab -->
+  <div class="tab-pane fade" id="nav-books" role="tabpanel" aria-labelledby="nav-books-tab">
+    <h2 class="text-center my-4">Favorite Books</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {{#each favorites.books}}
+        <div class="col">
+        {{> card_alt this type=../type }}
+        </div>
+      {{else}}
+        <div class="col-12 text-center">
+          <p>No favorite books yet</p>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+  
+  <!-- Communities Tab -->
+  <div class="tab-pane fade" id="nav-communities" role="tabpanel" aria-labelledby="nav-communities-tab">
+    <h2 class="text-center my-4">Favorite Communities</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {{#each favorites.communities}}
+        {{> communitypartial}}
+      {{else}}
+        <div class="col-12 text-center">
+          <p>No favorite communities yet</p>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</div>
+  /* Make text color #8b1d2e for all nav-tab buttons */
+  .nav-tabs .nav-link {
+    color: #8b1d2e;
+  }
+
+  .nav-tabs .nav-link.active {
+    color: #8b1d2e !important;
+  }
+
+  .nav-tabs .nav-link:hover,
+  .nav-tabs .nav-link:focus {
+    color: #8b1d2e;
+  }
+</style>

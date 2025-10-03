@@ -1,0 +1,123 @@
+<h2 class="text-center my-4 text-white display-5 fw-bold" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.6); letter-spacing: 1px;">
+  Admin Panel
+</h2>
+
+
+<div class="container bg-white p-5 rounded shadow border-start border-4" style="border-color: #8b1d2e; max-width: 1000px;">
+  <h3 class="text-center mb-4 text-danger fw-bold" style="text-shadow: 1px 1px 3px rgba(255, 0, 0, 0.5);">
+  Create New Content
+</h3>
+
+
+
+  {{#if successMessage}}
+    <div class="alert alert-success text-center">{{successMessage}}</div>
+  {{/if}}
+
+  {{#if errorMessage}}
+    <div class="alert alert-danger text-center">{{errorMessage}}</div>
+  {{/if}}
+
+  <form action="/admin-panel" method="POST" enctype="multipart/form-data" class="row g-3">
+
+    <div class="col-md-4">
+      <label for="type" class="form-label">Category</label>
+      <select id="type" name="type" class="form-control shadow-sm border-1 border-dark-subtle rounded-3" required>
+        <option value="">-- Select --</option>
+        <option value="Book">Book</option>
+        <option value="Movie">Movie</option>
+        <option value="Game">Game</option>
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" id="title" name="title" class="form-control shadow-sm border-1 border-dark-subtle rounded-3" required>
+    </div>
+
+    <div class="col-md-4">
+      <label for="image" class="form-label">Image</label>
+      <input type="file" id="image" name="image" class="form-control shadow-sm border-1 border-dark-subtle rounded-3" accept="image/*" required>
+    </div>
+
+    <div class="col-12">
+      <label for="description" class="form-label">Description</label>
+      <textarea id="description" name="description" class="form-control shadow-sm border-1 border-dark-subtle rounded-3" rows="3" required></textarea>
+    </div>
+
+    <div class="col-12 text-center">
+      <button type="submit" class="btn btn-success px-4">Submit</button>
+    </div>
+  </form>
+</div>
+
+
+<!-- Pending Requests -->
+<div class="admin-section">
+  <div class="pending-box">Pending</div>
+  <table class="table admin-table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Type</th>
+        <th>Title</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each pendingRequests}}
+      <tr>
+        <td>{{Username}}</td>
+        <td>{{ContentType}}</td>
+        <td>{{Title}}</td>
+        <td>
+          <a href="/admin-panel/{{RequestID}}" class="btn btn-warning">Edit</a>
+
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+
+<!-- Completed requests -->
+<div class="admin-section">
+  <div class="completed-box">Completed</div>
+  <table class="table admin-table table-sm">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Type</th>
+        <th>Title</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each completedRequests}}
+      <tr>
+        <td>{{Username}}</td>
+        <td>{{ContentType}}</td>
+        <td>{{Title}}</td>
+<td>
+  {{#ifEquals Status "Approved"}}
+    <span class="badge bg-success">Approved</span>
+  {{else ifEquals Status "Rejected"}}
+    <span class="badge bg-danger">Declined</span>
+  {{else}}
+    <span class="badge bg-warning text-dark">{{Status}}</span>
+  {{/ifEquals}}
+</td>
+
+
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+
+<!-- Error -->
+{{#if errorMessage}}
+  <p class="text-danger text-center">{{errorMessage}}</p>
+{{/if}}

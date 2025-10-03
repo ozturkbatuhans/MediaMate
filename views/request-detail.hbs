@@ -1,0 +1,50 @@
+<div class="container mt-5 p-4 rounded" style="background-color: hsla(351, 70%, 38%, 0.8); color: black;">
+  <h1 class="text-center mb-4">Edit Request</h1>
+
+  {{#if successMessage}}
+    <div class="alert alert-success text-center">{{successMessage}}</div>
+  {{/if}}
+
+  {{#if errorMessage}}
+    <div class="alert alert-danger text-center">{{errorMessage}}</div>
+  {{/if}}
+
+  <form action="/admin/edit/{{request.RequestID}}" method="POST" enctype="multipart/form-data" class="col-md-8 offset-md-2">
+    <div class="mb-3">
+      <label for="type" class="form-label">Category</label>
+      <select id="type" name="type" class="form-select" required>
+        <option value="">-- Select a category --</option>
+        <option value="Book" {{#ifEquals request.ContentType "Book"}}selected{{/ifEquals}}>Book</option>
+        <option value="Game" {{#ifEquals request.ContentType "Game"}}selected{{/ifEquals}}>Game</option>
+        <option value="Movie" {{#ifEquals request.ContentType "Movie"}}selected{{/ifEquals}}>Movie</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" id="title" name="title" class="form-control" value="{{request.Title}}" required />
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea id="description" name="description" rows="4" class="form-control" required>{{request.Description}}</textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Image Preview</label>
+      <div class="text-center mb-3">
+        <img src="{{request.Image}}" alt="Image" class="img-fluid" style="max-height: 200px;" />
+      </div>
+    </div>
+
+      <div class="mb-3">
+    <label for="image" class="form-label">Change Image (optional)</label>
+    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+  </div>
+
+    <div class="text-center d-flex justify-content-center gap-3">
+      <button type="submit" class="btn btn-success" name="action" value="accept">Accept Request</button>
+      <button type="submit" class="btn btn-danger" name="action" value="decline">Decline Request</button>
+    </div>
+  </form>
+</div>

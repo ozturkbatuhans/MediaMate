@@ -1,0 +1,347 @@
+-- Create Users table
+CREATE TABLE Users 
+(
+    UserID INTEGER NOT NULL IDENTITY(1,1),
+    Username VARCHAR(25),
+    Email VARCHAR(254),
+    PasswordHash VARCHAR(255),
+    UserType VARCHAR(5),
+    Image VARCHAR(255)
+)
+GO
+
+ALTER TABLE Users ADD CONSTRAINT Users_PK PRIMARY KEY CLUSTERED (UserID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE Users ADD CONSTRAINT CHK_UserType CHECK (UserType IN ('User', 'Admin'))
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX UQ_Users_Usernamev1 ON Users (Username, Email)
+GO
+
+-- Create AdminPanelLogs table
+CREATE TABLE AdminPanelLogs 
+(
+    LogID INTEGER NOT NULL IDENTITY(1,1),
+    AdminUserID INTEGER NOT NULL,
+    ActionDescription VARCHAR(MAX),
+    ActionDate DATE
+)
+GO
+
+ALTER TABLE AdminPanelLogs ADD CONSTRAINT AdminPanelLogs_PK PRIMARY KEY CLUSTERED (LogID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE AdminPanelLogs 
+    ADD CONSTRAINT AdminPanelLogs_Users_FK FOREIGN KEY (AdminUserID) 
+    REFERENCES Users (UserID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+-- Create Communities table (formerly ChatRooms)
+CREATE TABLE Communities 
+(
+    ChatID INTEGER NOT NULL IDENTITY(1,1),
+    ChatName VARCHAR(30),
+    Keywords VARCHAR(150),
+    Image VARCHAR(255),
+    CreatorID INTEGER,
+    MemberID INTEGER
+)
+GO
+
+ALTER TABLE Communities ADD CONSTRAINT Communities_PK PRIMARY KEY CLUSTERED (ChatID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE Communities ADD CONSTRAINT Communities__UN UNIQUE NONCLUSTERED (ChatName)
+GO
+
+ALTER TABLE Communities 
+    ADD CONSTRAINT Communities_Users_FK_Creator FOREIGN KEY (CreatorID) 
+    REFERENCES Users (UserID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+ALTER TABLE Communities 
+    ADD CONSTRAINT Communities_Users_FK_Member FOREIGN KEY (MemberID) 
+    REFERENCES Users (UserID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+-- Create Books table
+CREATE TABLE Books 
+(
+    BookID INTEGER NOT NULL IDENTITY(1,1),
+    Title NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(2000),
+    ReleaseDate DATE,
+    Rating DECIMAL(2,1),
+    Image NVARCHAR(500),
+    AddedByUserID INTEGER
+)
+GO
+
+ALTER TABLE Books ADD CONSTRAINT Books_PK PRIMARY KEY CLUSTERED (BookID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE Books ADD CONSTRAINT Books_CK_Rating CHECK (Rating BETWEEN 0 AND 10)
+GO
+
+ALTER TABLE Books 
+    ADD CONSTRAINT Books_Users_FK FOREIGN KEY (AddedByUserID) 
+    REFERENCES Users (UserID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+-- Create Movies table
+CREATE TABLE Movies 
+(
+    MovieID INTEGER NOT NULL IDENTITY(1,1),
+    Title NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(2000),
+    ReleaseDate DATE,
+    Rating DECIMAL(2,1),
+    Image NVARCHAR(500),
+    AddedByUserID INTEGER
+)
+GO
+
+ALTER TABLE Movies ADD CONSTRAINT Movies_PK PRIMARY KEY CLUSTERED (MovieID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE Movies ADD CONSTRAINT Movies_CK_Rating CHECK (Rating BETWEEN 0 AND 10)
+GO
+
+ALTER TABLE Movies 
+    ADD CONSTRAINT Movies_Users_FK FOREIGN KEY (AddedByUserID) 
+    REFERENCES Users (UserID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+-- Create Games table
+CREATE TABLE Games 
+(
+    GameID INTEGER NOT NULL IDENTITY(1,1),
+    Title NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(2000),
+    ReleaseDate DATE,
+    Rating DECIMAL(2,1),
+    Image NVARCHAR(500),
+    AddedByUserID INTEGER
+)
+GO
+
+ALTER TABLE Games ADD CONSTRAINT Games_PK PRIMARY KEY CLUSTERED (GameID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE Games ADD CONSTRAINT Games_CK_Rating CHECK (Rating BETWEEN 0 AND 10)
+GO
+
+ALTER TABLE Games 
+    ADD CONSTRAINT Games_Users_FK FOREIGN KEY (AddedByUserID) 
+    REFERENCES Users (UserID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+-- Create Content table (junction table)
+CREATE TABLE Content 
+(
+    ContentID INTEGER NOT NULL IDENTITY(1,1),
+    BookID INTEGER,
+    MovieID INTEGER,
+    GameID INTEGER
+)
+GO
+
+ALTER TABLE Content ADD CONSTRAINT Content_PK PRIMARY KEY CLUSTERED (ContentID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE Content 
+    ADD CONSTRAINT Content_Books_FK FOREIGN KEY (BookID) 
+    REFERENCES Books (BookID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+ALTER TABLE Content 
+    ADD CONSTRAINT Content_Movies_FK FOREIGN KEY (MovieID) 
+    REFERENCES Movies (MovieID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+ALTER TABLE Content 
+    ADD CONSTRAINT Content_Games_FK FOREIGN KEY (GameID) 
+    REFERENCES Games (GameID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+-- Create Genres table
+CREATE TABLE Genres 
+(
+    GenreID INTEGER NOT NULL IDENTITY(1,1),
+    Name VARCHAR(20)
+)
+GO
+
+ALTER TABLE Genres ADD CONSTRAINT Genres_PK PRIMARY KEY CLUSTERED (GenreID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+-- Create Content_Genre table
+CREATE TABLE Content_Genre 
+(
+    GenreID INTEGER NOT NULL,
+    ContentID INTEGER NOT NULL
+)
+GO
+
+ALTER TABLE Content_Genre 
+    ADD CONSTRAINT Content_Genre_Genre_FK FOREIGN KEY (GenreID) 
+    REFERENCES Genres (GenreID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+ALTER TABLE Content_Genre 
+    ADD CONSTRAINT Content_Genre_Content_FK FOREIGN KEY (ContentID) 
+    REFERENCES Content (ContentID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+-- Create Favorites table
+CREATE TABLE Favorites 
+(
+    FavoriteID INTEGER NOT NULL IDENTITY(1,1),
+    UserID INTEGER NOT NULL,
+    ContentID INTEGER,
+    ChatRooms_ChatID INTEGER
+)
+GO
+
+ALTER TABLE Favorites ADD CONSTRAINT Favorites_PK PRIMARY KEY CLUSTERED (FavoriteID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE Favorites 
+    ADD CONSTRAINT Favorites_Communities_FK FOREIGN KEY (ChatRooms_ChatID) 
+    REFERENCES Communities (ChatID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+ALTER TABLE Favorites 
+    ADD CONSTRAINT Favorites_Content_FK FOREIGN KEY (ContentID) 
+    REFERENCES Content (ContentID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+ALTER TABLE Favorites 
+    ADD CONSTRAINT Favorites_Users_FK FOREIGN KEY (UserID) 
+    REFERENCES Users (UserID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+-- Create Requests table (formerly Moderation)
+CREATE TABLE Requests 
+(
+    RequestID INTEGER NOT NULL IDENTITY(1,1),
+    UserID INTEGER NOT NULL,
+    Status VARCHAR(50),
+    Description VARCHAR(500),
+    ContentType VARCHAR(5)
+)
+GO
+
+ALTER TABLE Requests ADD CONSTRAINT Requests_PK PRIMARY KEY CLUSTERED (RequestID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE Requests ADD CONSTRAINT Requests_CK_1 CHECK (Status IN ('Pending', 'Approved', 'Rejected'))
+GO
+
+ALTER TABLE Requests 
+    ADD CONSTRAINT Requests_Users_FK FOREIGN KEY (UserID) 
+    REFERENCES Users (UserID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+-- Create Reviews table
+CREATE TABLE Reviews 
+(
+    ReviewID INTEGER NOT NULL IDENTITY(1,1),
+    UserID INTEGER NOT NULL,
+    ContentID INTEGER NOT NULL,
+    Rating DECIMAL(2,1),
+    Comment VARCHAR(MAX),
+    ReviewDate DATE
+)
+GO
+
+ALTER TABLE Reviews ADD CONSTRAINT Reviews_PK PRIMARY KEY CLUSTERED (ReviewID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE Reviews ADD CONSTRAINT Reviews_CK_1 CHECK (Rating BETWEEN 0 AND 10)
+GO
+
+ALTER TABLE Reviews 
+    ADD CONSTRAINT Reviews_Content_FK FOREIGN KEY (ContentID) 
+    REFERENCES Content (ContentID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+ALTER TABLE Reviews 
+    ADD CONSTRAINT Reviews_Users_FK FOREIGN KEY (UserID) 
+    REFERENCES Users (UserID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+-- Create Messages table
+CREATE TABLE Messages 
+(
+    MessageID INTEGER NOT NULL IDENTITY(1,1),
+    FromUser INTEGER NOT NULL,
+    ChatID INTEGER NOT NULL,
+    Content NVARCHAR(750),
+    Time DATETIME
+)
+GO
+
+ALTER TABLE Messages ADD CONSTRAINT Messages_PK PRIMARY KEY CLUSTERED (MessageID)
+    WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON)
+GO
+
+ALTER TABLE Messages 
+    ADD CONSTRAINT Messages_Users_FK FOREIGN KEY (FromUser) 
+    REFERENCES Users (UserID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO
+
+ALTER TABLE Messages 
+    ADD CONSTRAINT Messages_Communities_FK FOREIGN KEY (ChatID) 
+    REFERENCES Communities (ChatID) 
+    ON DELETE NO ACTION 
+    ON UPDATE NO ACTION
+GO

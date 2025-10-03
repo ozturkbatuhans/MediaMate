@@ -1,0 +1,210 @@
+<div class="container-fluid">
+  <div class="row">
+{{!-- 左侧社区列表 --}}
+<div class="col-4 border-end" style="height: 100vh; overflow-y: auto; padding-top:1rem;">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5>My Communities</h5>
+    <a href="/community" class="btn btn-sm btn-outline-primary">Discover</a>
+  </div>
+  
+  <div class="list-group" id="list-tab" role="tablist">
+    {{#each rooms}}
+      <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+         href="/chatroom?RoomID={{this.RoomID}}">
+        <div>
+          <img src="{{this.Image}}" 
+               alt="{{this.ChatName}}"
+               style="width: 30px; height: 30px; object-fit: cover; border-radius: 50%; margin-right: 10px;">
+          {{this.ChatName}}
+        </div>
+        <span class="badge bg-primary rounded-pill">{{this.memberCount}}</span>
+      </a>
+    {{else}}
+      <div class="alert alert-info">
+        You haven't joined any communities yet.
+        <a href="/community">Explore communities</a>
+      </div>
+    {{/each}}
+  </div>
+</div>
+    {{!-- 右侧：只渲染 currentRoom --}}
+    <div class="col-8 d-flex flex-column" style="height: 100vh; padding-top:1rem;">
+      <div class="tab-content flex-grow-1" id="nav-tabContent">
+        <div
+          class="tab-pane fade show active"
+          id="list-{{currentRoom.room.RoomID}}"
+          role="tabpanel"
+          aria-labelledby="list-{{currentRoom.room.RoomID}}-list"
+          data-room-id="{{currentRoom.room.RoomID}}"
+          data-room-name="{{currentRoom.room.ChatName}}"
+          style="display: flex; flex-direction: column; height: 100%;"
+        >
+          {{!-- 房间标题 --}}
+          <div class="mb-2">
+            <h4>{{currentRoom.room.ChatName}}</h4>
+          </div>
+
+          {{!-- 成员头像 --}}
+          <div class="mb-3">
+            <small><strong>Members:</strong></small>
+            <div>
+              {{#each currentRoom.members}}
+                <img
+                  src="{{#if this.Image}}/uploads/{{this.Image}}{{else}}/images/default-user.png{{/if}}"
+                  alt="{{this.Username}}"
+                  title="{{this.Username}}"
+                  style="width:30px; height:30px; object-fit:cover; border-radius:50%; margin-right:0.3rem;"
+                />
+              {{/each}}
+            </div>
+          </div>
+
+          {{!-- 历史消息区 --}}
+          <div
+            id="messages-{{currentRoom.room.RoomID}}"
+            class="flex-grow-1 p-2 mb-3"
+            style="overflow-y:auto; border:1px solid #ddd; background-color:#fff; display:flex; flex-direction:column;"
+          >
+            {{#each messages}}
+              {{#ifEquals this.RoomID ../currentRoom.room.RoomID}}
+                <div
+                  class="message {{#ifEquals this.Username ../user.Username}}self{{/ifEquals}}"
+                  style="
+                    margin-bottom:0.7rem;
+                    padding:0.5rem;
+                    border-radius:8px;
+                    max-width:70%;
+                    {{#ifEquals this.Username ../user.Username}}
+                      background-color:#d1e7dd;
+                      align-self:flex-end;
+                    {{else}}
+                      background-color:#f1f1f1;
+                      align-self:flex-start;
+                    {{/ifEquals}}
+                  "
+                >
+                  <div>
+                    <strong>{{this.Username}}</strong>: {{this.Content}}
+                  </div>
+                  <div style="font-size:0.75rem; color:#666;">
+                    {{this.Time}}
+                  </div>
+                </div>
+              {{/ifEquals}}
+            {{/each}}
+          </div>
+
+          {{!-- 底部：发送表单 --}}
+          <div class="mt-auto border-top pt-2">
+            <form class="d-flex" data-room-id="{{currentRoom.room.RoomID}}">
+              <input
+                type="text"
+                class="form-control me-2 message-input"
+                placeholder="Type a message…"
+                autocomplete="off"
+              />
+              <button type="submit" class="btn btn-primary">Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+  window.addEventListener("DOMContentLoaded", function() {
+    const socket = io();
+
+    // 后端保证传了 user.UserID 和 user.Username，否则用 0/"Guest"
+    const currentUser = {
+      id: {{#if user.UserID}}{{user.UserID}}{{else}}0{{/if}},
+      username: "{{#if user.Username}}{{user.Username}}{{else}}Guest{{/if}}"
+    };
+
+    // 只要当前房间 ID 存在就用，否则就是 0
+    const activeRoomId = {{#if currentRoom.room.RoomID}}{{currentRoom.room.RoomID}}{{else}}0{{/if}};
+
+    // 如果 activeRoomId 非 0，就立刻 authenticate 并 join room
+    if (activeRoomId !== 0) {
+      socket.emit("authenticate", currentUser.id, function(resp) {
+        if (!resp.success) {
+          alert(resp.error || "Authentication failed");
+          return;
+        }
+        // 这里我们**只传数字的 RoomID**
+        socket.emit("join room", activeRoomId, function(data) {
+          if (data.error) {
+            console.error("Join room failed:", data.error);
+            return;
+          }
+          console.log("Joined room:", data.room.ChatName);
+          // （可选）如果想把后端拉回来的 data.messages 重新渲染一遍，可以在这里处理
+        });
+      });
+    }
+
+    // 找到 “发送消息”的那个表单并绑定 submit 事件
+    const chatForm = document.querySelector('form[data-room-id]');
+    if (chatForm) {
+      chatForm.addEventListener("submit", function(e) {
+        e.preventDefault(); // **一定要阻止默认的 form 提交**
+        const text = this.querySelector("input.message-input").value.trim();
+        if (!text || activeRoomId === 0) return;
+        socket.emit("chat message", {
+          roomId: activeRoomId,
+          message: text
+        });
+        this.querySelector("input.message-input").value = "";
+      });
+    }
+
+    // 监听后端广播，把新消息插入
+    socket.on("chat message", function(data) {
+      const { roomId, username, message, time } = data;
+      if (roomId !== activeRoomId) return;
+      const container = document.getElementById(`messages-${roomId}`);
+      if (!container) return;
+      const div = document.createElement("div");
+      div.classList.add("message");
+      if (username === currentUser.username) {
+        div.classList.add("self");
+        div.style.backgroundColor = "#d1e7dd";
+        div.style.alignSelf = "flex-end";
+      } else {
+        div.style.backgroundColor = "#f1f1f1";
+        div.style.alignSelf = "flex-start";
+      }
+      div.style.marginBottom = "0.7rem";
+      div.style.padding = "0.5rem";
+      div.style.borderRadius = "8px";
+      div.style.maxWidth = "70%";
+      div.innerHTML = `
+        <div><strong>${username}</strong>: ${message}</div>
+        <div style="font-size:0.75rem; color:#666;">
+          ${new Date(time).toLocaleTimeString()}
+        </div>
+      `;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    });
+
+    // 页面载入时让历史消息区滚到底部
+    if (activeRoomId !== 0) {
+      const defaultContainer = document.getElementById(`messages-${activeRoomId}`);
+      if (defaultContainer) {
+        defaultContainer.scrollTop = defaultContainer.scrollHeight;
+      }
+    }
+  });
+</script>
+
+<style>
+  /* 如果想给“自己消息”再加点样式，可以在这里写 */
+  .message.self {
+    /* 由 JS 设置了 align-self: flex-end、背景色等 */
+  }
+</style>

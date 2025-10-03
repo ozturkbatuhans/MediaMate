@@ -1,0 +1,111 @@
+<header>
+  <section class="hero">
+    <div class="banner"
+      style="background-image: url('{{banner}}'); background-size: cover; background-position: center; height: 600px; display: flex; justify-content: center; align-items: center; position: relative;">
+      <div class="container text-center" style="z-index: 2;">
+
+        <!-- Title -->
+        <div class="row mb-3" style="position: relative; z-index: 3;">
+          <div class="hero-text mx-auto">
+            <h2 class="m-0">{{hero.cta}}</h2>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="row mb-4" style="position: relative; z-index: 3;">
+          <div class="hero-desc mx-auto">
+            <p class="m-0">{{hero.shortDescription}}</p>
+          </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-6">
+            <form class="d-flex" role="search" action="/search" method="POST">
+              <div class="input-group input-group-lg">
+                <span class="input-group-text" style="background-color: #8b1d2e; border-color: #8b1d2e;">
+                  <i class="bi bi-search" style="color: white;"></i>
+                </span>
+                <input class="form-control border-2" type="search" name="query"
+                  placeholder="Find books, movies, or games..." aria-label="Search"
+                  style="border-color: #8b1d2e; background-color: #f4d1d1; color: #8b1d2e;" value="{{searchQuery}}">
+                <button type="button" class="btn" style="background-color: #8b1d2e; border-color: #8b1d2e;"
+                  data-bs-toggle="modal" data-bs-target="#genreFilterModal">
+                  <i class="bi bi-funnel" style="color: white;"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</header>
+
+        {{>filtermodal}}
+
+<section class="best-rated">
+  <div class="container overflow-hidden text-center my-5">
+    <div class="row text-start ps-0 p-4">
+      <h3>Top Rated</h3>
+    </div>
+    {{> slider content=bestRatedContent includeType=true }}
+  </div>
+</section>
+
+<section class="discover-books">
+  <div class="container overflow-hidden text-center my-5">
+    <div class="row text-start ps-0 p-4">
+      <h3>Discover Books</h3>
+    </div>
+    {{> slider content=randomBooksContent includeType=true }}
+  </div>
+</section>
+
+<section class="discover-movies">
+  <div class="container overflow-hidden text-center my-5">
+    <div class="row text-start ps-0 p-4">
+      <h3>Discover Movies</h3>
+    </div>
+    {{> slider content=randomMoviesContent includeType=true }}
+  </div>
+</section>
+
+<section class="discover-games">
+  <div class="container overflow-hidden text-center my-5">
+    <div class="row text-start ps-0 p-4">
+      <h3>Discover Games</h3>
+    </div>
+    {{> slider content=randomGamesContent includeType=true }}
+  </div>
+</section>
+
+<!-- Styles -->
+<style>
+  /* Title styling */
+  .hero-text {
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.35);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    display: inline-block;
+    max-width: 70%;
+  }
+
+  /* Description styling */
+  .hero-desc {
+    backdrop-filter: blur(2px);
+    background-color: rgba(0, 0, 0, 0.25);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 5px;
+    display: inline-block;
+    max-width: 50%;
+  }
+
+  /* Optional spacing below hero */
+  .hero {
+    margin-bottom: 60px;
+  }
+</style>

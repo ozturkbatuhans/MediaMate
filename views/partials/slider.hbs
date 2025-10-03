@@ -1,0 +1,11 @@
+
+   <div class="card-slider">
+  <button onclick="scrollSliderLeft(this)" class="arrow arrow-left"> < </button>
+  <button onclick="scrollSliderRight(this)" class="arrow arrow-right"> > </button>
+
+  <div class="card-container overflow-hidden">
+    {{#each content}}
+      {{> card this from="home" }}
+    {{/each}}
+  </div>
+</div>

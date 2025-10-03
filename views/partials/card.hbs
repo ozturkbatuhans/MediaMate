@@ -1,0 +1,23 @@
+<a href="/category/{{pluralizeType type}}/{{id}}?from={{#if from}}{{from}}{{else}}search{{/if}}" style="text-decoration: none; color: inherit;">
+  <div class="card h-100 shadow-sm">
+    <img src="{{img}}" alt="{{title}}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
+
+    <div class="card-body text-start" style="position: relative; padding-bottom: 3rem;">
+      <div class="d-flex justify-content-between">
+        <h4 class="flex-grow-1">{{title}}</h4>
+        {{> iheart}}
+      </div>
+
+      <div class="d-flex flex-column-reverse align-items-start position-absolute bottom-0 start-0 ms-3 mb-3 genres-container" style="max-width: 18rem;">
+        <div class="d-flex flex-row flex-wrap align-items-end" style="gap: 0.25rem;">
+          {{#each Genres}}
+            <span class="badge bg-danger" style="min-width: 5.5rem; text-align: center;">{{this}}</span>
+          {{/each}}
+        </div>
+      </div>
+      <span class="badge bg-secondary position-absolute bottom-0 end-0 me-3 mb-3 align-self-end">
+        {{ContentType}}
+      </span>
+    </div>
+  </div>
+</a>

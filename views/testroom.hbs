@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chatroom</title>
+        <style>
+            body{
+                font-family: Arial, sans-serif;
+                background-color: aliceblue;
+            }
+            #messages{
+                list-style-type: none; padding: 0;
+            }
+            #messages li{
+                padding: 8px; margin-bottom: 10px; border-bottom: 1px solid #ddd;
+            }
+            #form{
+                display: flex;
+                gap: 10px;
+            }
+            #input{
+                flex: 1;
+            }
+        </style>
+    </head>
+    <body>
+        <ul id="messages"></ul>
+        <form id="form">
+            <input id="input" autocomplete="off"/>
+            <button type="submit">Send</button>
+        </form>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(function () {
+                const socket = io();
+                let username = prompt('Enter your username') || '?';
+                let roomname = prompt('Enter room name to join/create') || '00';
+//login
+                socket.emit('login', username, (user) => {
+                    console.log('Logged in as', user);
+//enter room
+                    socket.emit('join room', roomname, (data) => {
+                        console.log('Joined room: ', data.room.ChatName);
+                        $('#messages').append(`<li>--- Joined room: ${data.room.ChatName} ---</li>`);
+                        room.messages.forEach(msg => {
+                            $('#messages').append($('<li>').text(`[${msg.username}] ${msg.message}`));
+                        });
+                    });
+                });
+//send
+                $('form').submit(function () {
+                    const text = $('#input').val().trim();
+                    socket.emit('chat message', text);
+                    $('#input').val('');
+                    return false;
+                });
+//recieve and show
+                socket.on('chat message', function (data) {
+                    $('#messages').append($('<li>').text(`[${data.username}] ${data.message}`));
+                });
+            });
+       </script>
+    </body>
+</html>

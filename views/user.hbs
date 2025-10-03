@@ -1,0 +1,144 @@
+<div class="container mt-5 p-4 rounded" style="background-color: hsla(351, 70%, 38%, 0.8); color: black;">
+  <h1 class="text-center mb-3">My Profile</h1>
+  {{#if (eq user.UserType "Admin")}}
+  <p class="text-center mb-4"><strong>Type: {{user.UserType}}</strong></p>
+  {{/if}}
+
+  <!-- Success Message -->
+  {{#if successMessage}}
+  <div class="alert alert-success text-center" role="alert">
+    {{successMessage}}
+  </div>
+  {{/if}}
+
+  <!-- General Error -->
+  {{#if errors.general}}
+  <div class="alert alert-danger text-center" role="alert">
+    {{errors.general}}
+  </div>
+  {{/if}}
+
+  <!-- User Info with Inline Editable Fields -->
+  <form action="/user" method="POST" enctype="multipart/form-data" id="profileForm">
+    <div class="row mb-4">
+      <div class="col-md-3 text-center pt-5">
+        <img id="profilePicPreview" src="{{user.Image}}" alt="Profile Picture" class="rounded-circle mb-2" width="120" height="120">
+        <div>
+          <button type="button" class="btn btn-outline-dark btn-sm" onclick="document.getElementById('image').click()">
+            Change Picture
+          </button>
+        </div>
+        <input type="file" class="form-control {{#if errors.image}}is-invalid{{/if}}" id="image" name="image"
+          accept="image/jpeg,image/jpg,image/png" style="display: none;" />
+        {{#if errors.image}}
+        <div class="invalid-feedback d-block text-center">
+          {{errors.image}}
+        </div>
+        {{/if}}
+      </div>
+      <div class="col-md-9">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" value="{{user.Username}}" readonly
+            style="background-color: #f8f9fa; border-color: #ccc; cursor: not-allowed;" />
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control {{#if errors.email}}is-invalid{{/if}}" id="email" name="email"
+            value="{{inputValues.email}}" maxlength="254" style="background-color: #fff; border-color: #ccc;" />
+          {{#if errors.email}}
+          <div class="invalid-feedback">
+            {{errors.email}}
+          </div>
+          {{/if}}
+        </div>
+        <div class="mb-3">
+          <button type="button" class="btn btn-outline-dark" onclick="toggleEdit('passwordEdit')">
+            Change Password
+          </button>
+          <div id="passwordEdit" style="display: none;" class="mt-2">
+            <div class="mb-3">
+              <label for="currentPassword" class="form-label">Current Password</label>
+              <input type="password" class="form-control {{#if errors.currentPassword}}is-invalid{{/if}}"
+                id="currentPassword" name="currentPassword" style="background-color: #fff; border-color: #ccc;" />
+              {{#if errors.currentPassword}}
+              <div class="invalid-feedback">
+                {{errors.currentPassword}}
+              </div>
+              {{/if}}
+            </div>
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">New Password</label>
+              <input type="password" class="form-control {{#if errors.newPassword}}is-invalid{{/if}}" id="newPassword"
+                name="newPassword" minlength="6" style="background-color: #fff; border-color: #ccc;" />
+              {{#if errors.newPassword}}
+              <div class="invalid-feedback">
+                {{errors.newPassword}}
+              </div>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-danger">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- User Requests -->
+<div class="mt-5">
+  <h2 class="mb-3">Your Requests</h2>
+  {{#if requests.length}}
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Request ID</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Content Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each requests}}
+      <tr>
+        <td>{{this.RequestID}}</td>
+        <td>{{this.Description}}</td>
+        <td>
+          {{#ifEquals this.Status "Approved"}}
+            <span class="badge bg-success">Approved</span>
+          {{else ifEquals this.Status "Rejected"}}
+            <span class="badge bg-danger">Declined</span>
+          {{else}}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {{/ifEquals}}
+        </td>
+        <td>{{this.ContentType}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+  <p class="text-center">You have no requests.</p>
+  {{/if}}
+</div>
+
+
+<script>
+  function toggleEdit(fieldId) {
+    const field = document.getElementById(fieldId);
+    field.style.display = field.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // Instant profile picture preview
+  document.getElementById('image').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('profilePicPreview').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>

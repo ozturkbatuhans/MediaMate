@@ -1,0 +1,118 @@
+<nav class="navbar navbar-expand-lg sticky-top" style="background-color: #8b1d2e;">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white" href="/">
+      <img src="/images/Media.png" alt="Logo" width="120" height="30" class="d-inline-block align-text-top">
+    </a>
+
+    <!-- Mobile menu toggle -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+      aria-controls="mobileMenu" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+  <!-- Desktop nav links -->
+  <ul class="navbar-nav d-none d-lg-flex flex-row gap-4 ms-3">
+    <li class="nav-item"><a class="nav-link text-white" href="/category/games">Games</a></li>
+    <li class="nav-item"><a class="nav-link text-white" href="/category/movies">Movies</a></li>
+    <li class="nav-item"><a class="nav-link text-white" href="/category/books">Books</a></li>
+    <li class="nav-item"><a class="nav-link text-white" href="/community">Community</a></li>
+    <li class="nav-item"><a class="nav-link text-white" href="/contact">Contact</a></li>
+
+
+
+  </ul>
+
+    <!-- Desktop buttons right -->
+    <div class="d-none d-lg-flex ms-auto">
+      {{#if user}}
+        <div class="dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 px-3 py琪-1 rounded text-white"
+             href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+               <img src="{{user.Image}}" width="28px" height="28px" class="rounded-circle">
+            {{user.Username}}
+          </a>
+          
+         <ul class="dropdown-menu dropdown-menu-end p-3" style="min-width: 220px;">
+  <li class="mb-2 ps-1 text-muted">Welcome, {{user.Username}}</li>
+  <li><a class="dropdown-item py-2" href="/user">My Profile</a></li>
+  <li><a class="dropdown-item py-2" href="/add">Request</a></li>
+  <li><a class="dropdown-item py-2" href="/favorites">Favorites</a></li>
+
+  {{#ifEquals (toLowerCase user.UserType) "admin"}}
+    <li><a class="dropdown-item py-2 text-danger fw-semibold" href="/admin-panel">Admin Panel</a></li>
+  {{/ifEquals}}
+
+  <li><hr class="dropdown-divider"></li>
+  <li><a class="btn btn-outline-danger w-100" href="/logout">Logout</a></li>
+</ul>
+
+        </div>
+      {{else}}
+        <a href="/login" class="btn btn-login btn-sm me-2">Log in</a>
+        <a href="/register" class="btn btn-register btn-sm">Register</a>
+      {{/if}}
+    </div>
+
+<!-- Fullscreen Mobile Menu -->
+<div class="offcanvas offcanvas-end text-white bg-blur d-lg-none" tabindex="-1" id="mobileMenu">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title">MENU</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column justify-content-between">
+
+    
+    
+    <!-- Navigation Links -->
+    <div class="d-flex flex-column gap-2">
+      <a href="/category/games" class="nav-link text-white">Games</a>
+      <a href="/category/movies" class="nav-link text-white">Movies</a>
+      <a href="/category/books" class="nav-link text-white">Books</a>
+      <a href="/community" class="nav-link text-white">Community</a>
+      <a href="/contact" class="nav-link text-white">Contact</a>
+
+
+
+
+
+    </div>
+
+    <hr class="border-light">
+
+<!-- Auth Links (only mobile) -->
+<div class="d-flex flex-column gap-2 d-lg-none">
+  {{#if user}}
+    <div class="user-info mb-3 px-3"></div>
+
+    <div class="d-flex flex-column gap-2 px-3">
+      <a href="/user" class="nav-link text-white">My Profile</a>
+      <a href="/add" class="nav-link text-white">Request</a>
+      <a href="/favorites" class="nav-link text-white">Favorites</a>
+
+{{#if user}}
+  {{#ifEquals (toLowerCase user.UserType) "admin"}}
+    <a href="/admin-panel" class="nav-link text-white">Admin Panel</a>
+  {{/ifEquals}}
+{{/if}}
+
+    </div>
+
+    <div class="mt-4 px-3">
+      <a href="/logout" class="btn btn-outline-light w-100">Logout</a>
+    </div>
+  {{else}}
+    <div class="d-flex flex-column gap-2 px-3">
+      <a href="/login" class="btn btn-outline-light">Log in</a>
+      <a href="/register" class="btn btn-light text-dark">Register</a>
+    </div>
+  {{/if}}
+</div>
+
+
+  </div>
+</div>
+
+
+
+  </div>
+</nav>
